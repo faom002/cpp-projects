@@ -1,0 +1,17 @@
+* Task 1
+  - (x) make numbers vector uppercase --> Done!
+  - https://en.cppreference.com/w/cpp/string/byte/toupper %searched touppercase in cppreference%
+  - https://en.cppreference.com/w/cpp/algorithm/transform %searched in cpp reference%
+
+
+* Task 2
+  - (-) Fill the second vector with the temperatures converted to Celcius. 
+        It is even better if you make it happen in a separate function. --> in progress!
+
+
+
+
+
+
+
+
