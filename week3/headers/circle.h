@@ -6,7 +6,7 @@ class Circle {
 
 private:
   Window window;
-  int circle_radius = 80;
+  int circle_radius = 360;
   std::optional<int> circle_pos_x = window.get_height() / 2;
   std::optional<int> circle_pos_y = window.get_width() / 2;
 
@@ -18,15 +18,13 @@ private:
 public:
   // change the color of circle
   void change_color_circle() {
-
+    Vector2 circle_pos_xy = {(float)circle_pos_x.value(),(float) circle_pos_y.value()};
     Vector2 mouse_pos_xy = GetMousePosition();
-    std::cout << "circle y pos " << circle_pos_y.value() << "\n";
-    // std::cout << "circle x pos " << circle_pos_x.value() << "\n";
-    // std::cout << "mouse pos x " << mouse_pos_xy.x << "\n";
-    std::cout << "mouse pos y " << mouse_pos_xy.y << "\n";
+   float distance = Vector2Distance(circle_pos_xy, mouse_pos_xy);
+    std::cout << "circle radius pos " << circle_radius << "\n";
+    std::cout << "mouse pos y " << distance << "\n";
 
-    if (mouse_pos_xy.x == circle_pos_x.value() ||
-        mouse_pos_xy.y == circle_pos_y.value()) {
+    if (distance <= circle_radius) {
 
         
         circle_pos_x = move_circle_away(circle_pos_x.value());
