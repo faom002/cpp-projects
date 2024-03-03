@@ -18,7 +18,6 @@ friend class Cricle;
 
 void initialize_window(){
 
-
     InitWindow(this->screen_width, this->screen_height, this->title);
 
 }

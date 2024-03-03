@@ -2,11 +2,12 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <raylib.h>
 class Circle {
 
 private:
   Window window;
-  int circle_radius = 360;
+  int circle_radius = 300;
   std::optional<int> circle_pos_x = window.get_height() / 2;
   std::optional<int> circle_pos_y = window.get_width() / 2;
 
@@ -18,7 +19,8 @@ private:
 public:
   // change the color of circle
   void change_color_circle() {
-    Vector2 circle_pos_xy = {(float)circle_pos_x.value(),(float) circle_pos_y.value()};
+DrawText("Moving circle on radius", window.get_height() / 4, window.get_width()/4, 20, Color(BLACK));
+      Vector2 circle_pos_xy = {(float)circle_pos_x.value(),(float) circle_pos_y.value()};
     Vector2 mouse_pos_xy = GetMousePosition();
    float distance = Vector2Distance(circle_pos_xy, mouse_pos_xy);
     std::cout << "circle radius pos " << circle_radius << "\n";
