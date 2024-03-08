@@ -8,14 +8,14 @@
 int main() {
 
   auto number_component = Entity::create();
-  number_component->Attach(std::make_shared<RecatngleComponent>());
+  number_component->Attach(std::make_shared<RectangleComponent>());
 
 
   // initialize window
   InitWindow(1200, 800, "rectangles");
 
 
-
+ SetTargetFPS(60);
   while (not WindowShouldClose()) {
   
   
@@ -23,7 +23,6 @@ int main() {
 BeginDrawing();
 
 
-ClearBackground(Color(WHITE));
 
   for (auto &elem : number_component->components) {
 
