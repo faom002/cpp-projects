@@ -11,6 +11,7 @@ int main() {
   number_component->Attach(std::make_shared<RectangleComponent>());
 
 
+
   // initialize window
   InitWindow(1200, 800, "rectangles");
 

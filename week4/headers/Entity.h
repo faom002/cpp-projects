@@ -22,7 +22,6 @@ struct Entity {
   };
 
 
-  // functional prototyping needs to be in cpp files
   void Attach(std::shared_ptr<Component> &&component){
 
       component->owner = self;

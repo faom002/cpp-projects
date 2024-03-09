@@ -2,11 +2,14 @@
   - (x) make numbers vector uppercase --> Done!
   - https://en.cppreference.com/w/cpp/string/byte/toupper %searched touppercase in cppreference%
   - https://en.cppreference.com/w/cpp/algorithm/transform %searched in cpp reference%
-
+  - tools used for this task (transform, toupper)
 
 * Task 2
-  - (-) Fill the second vector with the temperatures converted to Celcius. 
-        It is even better if you make it happen in a separate function. --> in progress!
+  - (x) Fill the second vector with the temperatures converted to Celcius. 
+        It is even better if you make it happen in a separate function. --> done!
+  - from fahrenheit to celsius you have to use this formula C = (F - 32) * (5/9)
+
+  - tools used for this task (size)
 
 
 
@@ -14,4 +17,6 @@
 
 
 
-
+* Task 3
+  - (x) Create a vector that is the sum of the two the ones element wise. --> done!
+  - tools used for this task (size, transform, plus) 

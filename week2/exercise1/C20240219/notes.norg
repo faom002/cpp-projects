@@ -1,0 +1,114 @@
+* Exercise 1
+ ** No unique address
+    
+  no_unique_address -->  makes it so that the (Allocator) of a class its (base) is empty.
+    
+    - for example: 
+    -- ^struct Empty {}^ 
+    -- ^[[no_unique_adress]] Empty e1 ,e2^ 
+  now both e1 and e2 share the same address of class Empty this is because for memory savings and reduces/eliminates padding between elements based on your architecture system and makes the program faster
+    
+    - example of this would be like this: 
+    -- ^char a;^ --> 1 byte
+    -- ^int b;^ --> 4 bytes
+    -- ^double c;^ --> 8 bytes on most system
+
+
+
+
+** Sentinels
+
+ sentinels --> are used whenever its not fixed size but dynamic to find the end iterator
+   - for example:
+   -- //empty sentinel 
+   -- struct zstring_sentinel {}; 
+   -- //checks if iterator is done and in c++20 (! =) operator is not required 
+   -- bool operator==(const char* str, zstring_sentinel)
+   -- {
+
+   -- return *str == '\0';
+
+   -- }
+
+   -- void do_sth(const char* str)
+
+   -- {
+   -- std::vector<char> buffer;
+   -- // final value str which is str + strlen(str)
+   -- // then zstring_sentinel will stop if iteraotr is done by the bool operator and inset into the back
+   --  std::ranges::copy(str, zstring_sentinel{},
+   --                    std::back_inserter(buffer));
+   -- // continue doing something
+   -- }
+
+
+** Monadic programming
+
+   monadic optional --> was added in C++23 where one could instead of using if else block nested inside each other they could do the following
+   - for example:
+
+   //normal if else mumbo jumbo 
+
+std::optional<UserProfile> fetchFromCache(int userId);
+std::optional<UserProfile> fetchFromServer(int userId);
+std::optional<int> extractAge(const UserProfile& profile);
+
+int main() {
+    const int userId = 12345;
+    std::optional<int> ageNext;
+
+    std::optional<UserProfile> profile = fetchFromCache(userId);
+    
+    if (!profile)
+        profile = fetchFromServer(userId);
+
+    if (profile) {
+        std::optional<int> age = extractAge(*profile);
+        
+        if (age)
+            ageNext = *age + 1;
+    }
+
+    if (ageNext)
+        cout << format("Next year, the user will be {} years old", *ageNext);
+    else
+        cout << "Failed to determine user's age.\n";
+   }
+
+   //Monadic approach
+
+std::optional<UserProfile> fetchFromCache(int userId);
+std::optional<UserProfile> fetchFromServer(int userId);
+std::optional<int> extractAge(const UserProfile& profile);
+
+int main() {
+    const int userId = 12345;
+
+   const auto ageNext = fetchFromCache(userId)
+
+   // ask him about what is the ([&]()) this about ? 
+
+        .or_else([&]() { return fetchFromServer(userId); })
+        .and_then(extractAge)
+        .transform([](int age) { return age + 1; });
+
+    if (ageNext)
+        cout << format("Next year, the user will be {} years old", *ageNext);
+    else 
+   cout << "Failed to determine user's age.\n";
+   }
+
+   it removes the if block reusage alot and instead uses more readable approach as or_else for (else) or and_then for (else if) but much more cleaner looking
+
+
+** Friends declaration
+   friends declaration allows a function to access private fields of a class so that you can use the fields inside the private variables inside class
+
+
+** Monostate
+   if a value is absent you and you dont want to use a boolean flag or pointer to indicate the absence of the value you can then use std::monostate
+
+
+
+
+   
