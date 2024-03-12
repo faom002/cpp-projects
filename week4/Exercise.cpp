@@ -1,4 +1,3 @@
-#include <iostream>
 #include <memory>
 #include <raylib.h>
 
@@ -9,34 +8,23 @@ int main() {
 
   auto number_component = Entity::create();
   number_component->Attach(std::make_shared<RectangleComponent>());
-
-
-
   // initialize window
   InitWindow(1200, 800, "rectangles");
 
-
- SetTargetFPS(60);
+  SetTargetFPS(60);
   while (not WindowShouldClose()) {
-  
-  
 
-BeginDrawing();
+    BeginDrawing();
 
+    for (auto &elem : number_component->components) {
 
+      elem->Draw();
+    }
 
-  for (auto &elem : number_component->components) {
-
-      elem->draw_rectangle_component();
-
+    EndDrawing();
   }
 
-
-EndDrawing();
-
-  }
-
-CloseWindow();
+  CloseWindow();
 
   return 0;
 }

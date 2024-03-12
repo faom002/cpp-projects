@@ -1,5 +1,4 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 #include <memory>
 #include <vector>
 #include "Components.h" 
@@ -32,4 +31,4 @@ struct Entity {
 };
 
 
-#endif
+

@@ -1,13 +1,10 @@
-
-#ifndef RECTANGLECOMPONENT_H
-#define RECTANGLECOMPONENT_H
-
+#pragma once
 #include "Components.h"
 #include <cmath>
 #include <raylib.h>
 
 struct RectangleComponent : public Component {
-  void draw_rectangle_component() override {
+  void Draw() override {
 
     ClearBackground(WHITE);
 
@@ -15,4 +12,3 @@ struct RectangleComponent : public Component {
   };
 };
 
-#endif
