@@ -1,8 +1,8 @@
 #include <memory>
 #include <raylib.h>
 
-#include "headers/Entity.h"
-#include "headers/RectangleComponent.h"
+#include "includes/Entity.h"
+#include "includes/RectangleComponent.h"
 
 int main() {
 

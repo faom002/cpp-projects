@@ -19,4 +19,14 @@
 
 * Task 3
   - (x) Create a vector that is the sum of the two the ones element wise. --> done!
-  - tools used for this task (size, transform, plus) 
+  - tools used for this task (size, transform, plus)
+
+
+
+
+
+
+
+* Keypoints
+  - shared pointer to a class is a pointer to its memory 
+  - weak pointer is just a checker for if the life cycle of the shared pointer is alive or not
