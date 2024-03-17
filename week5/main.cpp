@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <complex>
 #include <iostream>
 #include <memory>
@@ -14,9 +15,9 @@ struct Component {
 
   std::weak_ptr<Entity> owner;
 
-  virtual void Draw(){}
+  virtual void Draw() {}
 
-  virtual void Update(float seconds){}
+  virtual void Update() {}
 };
 
 struct Transform {
@@ -30,34 +31,52 @@ struct Entity {
   Transform transform;
   std::vector<std::shared_ptr<Component>> components;
 
-  static std::shared_ptr<Entity> make() {
+  std::vector<std::shared_ptr<Entity>> children;
 
-    auto ptr = std::shared_ptr<Entity>(new Entity());
+  std::weak_ptr<Entity> parent;
 
-    ptr->self = ptr;
+  pmall::Transform absolute_transform() {
+    auto p = parent.lock();
+    if (not p)
+      return transform;
 
-    return ptr;
+    auto trans = p->absolute_transform();
+
+    trans.position += transform.position;
+    trans.angle += transform.angle;
+
+    trans.scale = std::complex<float>{
+
+        trans.scale.real() * transform.scale.real(),
+        trans.scale.imag() * transform.scale.imag()
+
+    };
+
+    return trans;
   }
 
+  static std::shared_ptr<Entity>
+  make(std::shared_ptr<Entity> parent = nullptr) {
+    auto entity = std::shared_ptr<Entity>(new Entity());
+    entity->self = entity;
+    if (parent) {
+      entity->parent = parent;
+      parent->children.emplace_back(entity);
+    }
+    return entity;
+  }
   void Draw() {
 
     for (auto &enities : components) {
 
       enities->Draw();
     }
-  }
 
+    for (auto &child : children) {
 
-
- void Update(float deltaTimeSeconds) {
-
-    for (auto &enities : components) {
-
-      enities->Update(deltaTimeSeconds);
+      child->Draw();
     }
   }
-
-
 
   void Attach(std::shared_ptr<Component> component) {
 
@@ -82,15 +101,6 @@ struct Layer {
       layer->Draw();
     }
   }
-
-
-  void Update(float deltaTimeSeconds){
-
-      for (auto &layer : entites) {
-      layer->Update(deltaTimeSeconds);
-      }
-
-  }
 };
 
 struct Scene {
@@ -100,27 +110,62 @@ struct Scene {
 
 struct RectangleGizmoComponent : public Component {
   std::complex<float> size;
-
-  RectangleGizmoComponent(float width, float height) : size(width, height) {}
+  Color color;
+  RectangleGizmoComponent(float width, float height, Color color)
+      : size(width, height), color(color) {}
 
   void Draw() override {
 
     auto parent = owner.lock();
 
+    auto abs_tr = parent->absolute_transform();
+
     std::complex<float> actual_size = {
-        parent->transform.scale.real() * size.real(),
-        parent->transform.scale.imag() * size.imag(),
+        abs_tr.scale.real() * size.real(),
+        abs_tr.scale.imag() * size.imag(),
 
     };
 
-if(IsKeyDown(KEY_LEFT)) parent->transform.position -= 0.1*2;
-if(IsKeyDown(KEY_RIGHT)) parent->transform.position += 0.1*2;
-if(IsKeyDown(KEY_DOWN)) parent->transform.position += std::complex<float>(0,1) * static_cast<float>(0.1*2);
-LoadImage("/home/faisal/Documents/cpp-programming-tutor/week5/fatty.png");
+    DrawRectangle(abs_tr.position.real(), abs_tr.position.imag(),
+                  actual_size.imag(), actual_size.real(), color);
+  }
+};
 
-DrawRectangle(parent->transform.position.real(), parent->transform.position.imag(), actual_size.imag(), actual_size.real() , Color(RED));
+struct InputHairCross : public Component {
 
+  InputHairCross() {}
 
+  void Draw() override {
+
+    auto parent = owner.lock();
+
+    if (IsKeyDown(KEY_LEFT))
+      parent->transform.position -= 0.1 * 2;
+    if (IsKeyDown(KEY_RIGHT))
+      parent->transform.position += 0.1 * 2;
+    if (IsKeyDown(KEY_DOWN))
+      parent->transform.position +=
+          std::complex<float>(0, 1) * static_cast<float>(0.1 * 2);
+    if (IsKeyDown(KEY_UP))
+      parent->transform.position -=
+          std::complex<float>(0, 1) * static_cast<float>(0.1 * 2);
+  }
+};
+
+struct HairCrossComponent : public Component {
+
+  HairCrossComponent() {}
+
+  void Draw() override {
+
+    auto parent = owner.lock();
+
+    auto abs_tr = parent->absolute_transform();
+    Texture2D image =
+        LoadTexture("/home/faisal/Documents/cpp-programming-tutor/week5/"
+                    "—Pngtree—crosshairs_6045892.png");
+
+    DrawTexture(image, abs_tr.position.real(), abs_tr.position.imag(), BLACK);
   }
 };
 
@@ -132,18 +177,24 @@ int main() {
 
   auto rectangle = pmall::Entity::make();
 
+  auto haircross = pmall::Entity::make(rectangle);
   scene.layers.front().entites.emplace_back(rectangle);
 
-  rectangle->Attach(std::make_shared<pmall::RectangleGizmoComponent>(128, 264));
+  rectangle->Attach(
+      std::make_shared<pmall::RectangleGizmoComponent>(128, 128, RED));
+
+  haircross->Attach(std::make_shared<pmall::InputHairCross>());
+  haircross->Attach(std::make_shared<pmall::HairCrossComponent>());
 
   InitWindow(1200, 800, "test");
 
-  rectangle->transform.position.real(128);
-  rectangle->transform.position.imag(128);
-
+  rectangle->transform.position = {128, 128};
+  haircross->transform.position = {128, 128};
   while (not WindowShouldClose()) {
 
-    std::cout << rectangle->transform.position << "\n";
+    std::cout << "Blue rectangle position" << rectangle->transform.position
+              << "\n";
+    std::cout << "haircross position" << haircross->transform.position << "\n";
     BeginDrawing();
 
     ClearBackground(Color(WHITE));
